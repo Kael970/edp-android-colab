@@ -1,191 +1,212 @@
 package com.example.myapplication
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.myapplication.R
+import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
-            MaterialTheme {
-                BusinessCard()
+            MyApplicationTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    ProfileScreen()
+                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BusinessCard() {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        visible = true
-    }
-
-    // High-energy Cyberpunk / Synthwave Color Palette
-    val bgStart = Color(0xFF09071A)      // Deep Space Indigo
-    val bgEnd = Color(0xFF020105)        // Midnight Black
-    val neonCyan = Color(0xFF00F2FE)     // Electric Teal/Cyan
-    val neonMagenta = Color(0xFFF355DA)  // Hot Pink/Magenta
-    val cardBg = Color(0xEC0E101D)       // Premium dark glassmorphism (translucent)
-    val textMuted = Color(0xFFA5B4FC)    // Soft pastel violet-grey
-
-    // Vibrant Dual-Color Gradient for Borders
-    val vibrantGradient = Brush.linearGradient(
-        colors = listOf(neonCyan, neonMagenta)
-    )
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(bgStart, bgEnd)
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        // Glowing Neon Background Blob 1 (Cyan Glow)
-        Box(
-            modifier = Modifier
-                .size(350.dp)
-                .offset(x = (-80).dp, y = (-200).dp)
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(
-                            Color(0x2200F2FE),
-                            Color.Transparent
-                        )
+fun ProfileScreen() {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "My Profile",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
                     )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { /* Handle navigation */ }) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { /* Handle overflow */ }) {
+                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
-        )
-
-        // Glowing Neon Background Blob 2 (Magenta Glow)
-        Box(
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { /* Handle add action */ },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                Icon(imageVector = Icons.Default.PersonAdd, contentDescription = "Add Person")
+            }
+        }
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .size(350.dp)
-                .offset(x = 80.dp, y = 200.dp)
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(
-                            Color(0x22F355DA),
-                            Color.Transparent
-                        )
-                    )
-                )
-        )
-
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { 300 })
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
+            // Region B: Avatar + Badge
+            Box(contentAlignment = Alignment.BottomEnd) {
+                Image(
+                    painter = painterResource(id = R.drawable.gwapoko),
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .border(4.dp, MaterialTheme.colorScheme.primary, CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+                // Status dot
+                Surface(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .border(3.dp, MaterialTheme.colorScheme.surface, CircleShape),
+                    shape = CircleShape,
+                    color = Color(0xFF4CAF50) // Green status dot
+                ) {}
+            }
+
+            // Region C: Name & Role
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "John Lloyd M. Valmoria",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Web Developer",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            // Region D: Action Buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { /* Handle follow */ },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Follow")
+                }
+                OutlinedButton(
+                    onClick = { /* Handle message */ },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("Message")
+                }
+            }
+
+            // Region E: Stats Card
             Card(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth()
-                    // Vibrant gradient border wrapping the card
-                    .border(
-                        width = 1.5.dp,
-                        brush = vibrantGradient,
-                        shape = RoundedCornerShape(28.dp)
-                    ),
-                shape = RoundedCornerShape(28.dp),
-                colors = CardDefaults.cardColors(containerColor = cardBg),
-                elevation = CardDefaults.cardElevation(30.dp)
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    StatItem(number = "120", label = "Posts")
+                    StatItem(number = "15K", label = "Followers")
+                    StatItem(number = "320", label = "Following")
+                }
+            }
+
+            // Region F: Contact Info Card
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(vertical = 40.dp, horizontal = 28.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Profile Image with a thick glowing gradient border
-                    Image(
-                        painter = painterResource(id = R.drawable.gwapoko),
-                        contentDescription = "Profile",
-                        modifier = Modifier
-                            .size(140.dp)
-                            .clip(CircleShape)
-                            .border(4.dp, vibrantGradient, CircleShape)
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Text(
-                        text = "John Lloyd Valmoria",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.White,
-                        fontFamily = FontFamily.SansSerif
-                    )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = "Information Technology Student",
-                        fontSize = 15.sp,
-                        color = textMuted,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // Developer Tag in Electric Cyan
-                    Text(
-                        text = "SOFTWARE DEVELOPER",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Black,
-                        color = neonCyan,
-                        letterSpacing = 2.5.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    // Contact row 1 with Cyan highlights
-                    ContactRow(
-                        icon = "☎",
-                        text = "+63 912 345 6789",
-                        iconColor = neonCyan
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    // Contact row 2 with Magenta highlights
-                    ContactRow(
-                        icon = "✉",
-                        text = "jlvalmoria03@gmail.com",
-                        iconColor = neonMagenta
-                    )
+                    ProfileContactInfoRow(icon = Icons.Default.Email, text = "jvalmoria91581@liceo.edu.ph")
+                    ProfileContactInfoRow(icon = Icons.Default.Phone, text = "+63 927 511 7041")
+                    ProfileContactInfoRow(icon = Icons.Default.LocationOn, text = "Citihomes,Malanang Opol Misamis Oriental")
                 }
             }
         }
@@ -193,43 +214,39 @@ fun BusinessCard() {
 }
 
 @Composable
-fun ContactRow(icon: String, text: String, iconColor: Color) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                Color(0xFF141529), // Deep cosmic purple-dark container
-                RoundedCornerShape(14.dp)
-            )
-            .border(
-                width = 1.dp,
-                brush = Brush.horizontalGradient(
-                    colors = listOf(Color(0x1AFFFFFF), Color(0x05FFFFFF))
-                ),
-                shape = RoundedCornerShape(14.dp)
-            )
-            .padding(horizontal = 20.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = icon,
-            fontSize = 22.sp,
-            color = iconColor
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Text(
-            text = text,
-            fontSize = 15.sp,
-            color = Color.White,
-            fontWeight = FontWeight.Medium
-        )
+fun StatItem(number: String, label: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = number, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+        Text(text = label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun BusinessCardPreview() {
-    BusinessCard()
+fun ProfileContactInfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = text, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Preview(showBackground = true, name = "Light Mode")
+@Composable
+fun ProfilePreviewLight() {
+    MyApplicationTheme(darkTheme = false) {
+        ProfileScreen()
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Dark Mode")
+@Composable
+fun ProfilePreviewDark() {
+    MyApplicationTheme(darkTheme = true) {
+        ProfileScreen()
+    }
 }
