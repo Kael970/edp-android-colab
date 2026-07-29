@@ -1,15 +1,14 @@
 package com.example.myapplication
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,151 +18,192 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
+fun ProfileScreen(onThemeToggle: () -> Unit, isDarkTheme: Boolean) {
 
-        // 1. Circular avatar - initials placeholder
-        Box(
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
-                .border(2.dp, MaterialTheme.colorScheme.onPrimary, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "JV", // Initials for John Valmoria
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onPrimary
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "My Profile",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
+                actions = {
+                    IconButton(onClick = onThemeToggle) {
+                        Icon(
+                            imageVector =
+                                if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
+                            contentDescription = "Toggle Theme",
+                        )
+                    }
+                },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
             )
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // 2. Full name - bold, largest text
-        Text(
-            text = "John Lloyd M. Valmoria",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold
-        )
-
-        // 3. Course + Section subtitle
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+    ) { innerPadding ->
+        Column(
+            modifier =
+                Modifier.padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 20.dp, vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
-            Icon(
-                imageVector = Icons.Default.School,
-                contentDescription = null,
-                modifier = Modifier.size(18.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "BSIT - 3-2",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // 4. Info Card
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+            Box(
+                modifier =
+                    Modifier.size(100.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary)
+                        .border(2.dp, MaterialTheme.colorScheme.onPrimary, CircleShape),
+                contentAlignment = Alignment.Center,
             ) {
-                // 5. Five info rows
-                InfoRow(
-                    icon = Icons.Default.Person,
-                    label = "Full Name",
-                    value = "John Lloyd M. Valmoria"
+                Text(
+                    text = "JV", 
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimary,
                 )
-                InfoRow(
-                    icon = Icons.Default.School,
-                    label = "Course",
-                    value = "Bachelor of Science in Information Technology"
+            }
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                Text(
+                    text = "John Lloyd M. Valmoria",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
                 )
-                InfoRow(
-                    icon = Icons.Default.Groups,
-                    label = "Section",
-                    value = "3-2"
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "BSIT · 3-2",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                InfoRow(
-                    icon = Icons.Default.Phone,
-                    label = "Mobile No.",
-                    value = "09979909332"
-                )
-                InfoRow(
-                    icon = Icons.Default.Email,
-                    label = "Email Address",
-                    value = "jvalmoria91581@liceo.edu.ph"
-                )
+            }
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.large,
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+
+                    InfoRow(
+                        icon = Icons.Default.Person,
+                        label = "Full Name",
+                        value = "John Lloyd M. Valmoria",
+                    )
+
+                    InfoRow(
+                        icon = Icons.Default.School,
+                        label = "Course",
+                        value = "BSIT",
+                    )
+
+                    InfoRow(
+                        icon = Icons.Default.Group,
+                        label = "Section",
+                        value = "3-2",
+                    )
+
+                    InfoRow(
+                        icon = Icons.Default.Phone,
+                        label = "Mobile No.",
+                        value = "09979909332",
+                    )
+
+                    InfoRow(
+                        icon = Icons.Default.Email,
+                        label = "Email Address",
+                        value = "jvalmoria91581@liceo.edu.ph",
+                    )
+                }
             }
         }
     }
 }
-
 @Composable
-fun InfoRow(icon: ImageVector, label: String, value: String) {
+fun InfoRow(
+    icon: ImageVector,
+    label: String,
+    value: String,
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth(),
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            modifier = Modifier.size(24.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.width(16.dp))
+        Box(
+            modifier =
+                Modifier.size(40.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp),
+            )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 text = value,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }
 }
 
-@Preview(showBackground = true, name = "Light Mode")
+@Preview(showBackground = true, name = "Light Mode — Profile Card")
 @Composable
-fun ProfileScreenPreview() {
+private fun ProfileScreenLightPreview() {
     MyApplicationTheme(darkTheme = false) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            ProfileScreen()
-        }
+        ProfileScreen(onThemeToggle = {}, isDarkTheme = false)
     }
 }
 
-@Preview(showBackground = true, name = "Dark Mode")
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode — Profile Card",
+)
 @Composable
-fun ProfileScreenDarkPreview() {
+private fun ProfileScreenDarkPreview() {
     MyApplicationTheme(darkTheme = true) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            ProfileScreen()
-        }
+        ProfileScreen(onThemeToggle = {}, isDarkTheme = true)
     }
 }
