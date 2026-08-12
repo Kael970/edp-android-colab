@@ -1,209 +1,163 @@
 package com.example.myapplication
 
-import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(onThemeToggle: () -> Unit, isDarkTheme: Boolean) {
+fun MainProfileScreen(vm: UserProfileViewModel = viewModel()) {
+    val uiState by vm.state.collectAsStateWithLifecycle()
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "My Profile",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-                actions = {
-                    IconButton(onClick = onThemeToggle) {
-                        Icon(
-                            imageVector =
-                                if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
-                            contentDescription = "Toggle Theme",
-                        )
-                    }
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                        actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-                    ),
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier =
-                Modifier.padding(innerPadding)
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 20.dp, vertical = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+    if (uiState.isViewingPreview) {
+        PreviewProfileContent(
+            data = uiState,
+            onGoBack = { vm.togglePreviewMode(show = false) },
+        )
+    } else {
+        EditProfileContent(
+            data = uiState,
+            handler = vm
+        )
+    }
+}
+
+@Composable
+fun EditProfileContent(data: UserProfileState, handler: UserProfileViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Text("Profile Setup", fontSize = 26.sp, fontWeight = FontWeight.ExtraBold)
+        Spacer(Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = data.name,
+            onValueChange = { handler.updateName(it) },
+            label = { Text("Complete Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = data.email,
+            onValueChange = { handler.updateEmail(it) },
+            label = { Text("Mail Address") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = data.mobile,
+            onValueChange = { handler.updateMobile(it) },
+            label = { Text("Contact Number") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = data.address,
+            onValueChange = { handler.updateAddress(it) },
+            label = { Text("Physical Address") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = data.username,
+            onValueChange = { handler.updateUsername(it) },
+            label = { Text("User Identity") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(Modifier.height(20.dp))
+        Text("Competencies", fontWeight = FontWeight.SemiBold)
+
+        Row(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-
-            Box(
-                modifier =
-                    Modifier.size(100.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
-                        .border(2.dp, MaterialTheme.colorScheme.onPrimary, CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = "JV", 
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
+            OutlinedTextField(
+                value = data.skillInput,
+                onValueChange = { handler.updateSkillInput(it) },
+                label = { Text("New Competency") },
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(Modifier.width(8.dp))
+            Button(onClick = { handler.confirmAddSkill() }) {
+                Text("Add")
             }
+        }
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-                Text(
-                    text = "John Lloyd M. Valmoria",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = "BSIT · 3-2",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            Card(
+        data.skillList.forEach { item ->
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.large,
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                colors =
-                    CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-
-                    InfoRow(
-                        icon = Icons.Default.Person,
-                        label = "Full Name",
-                        value = "John Lloyd M. Valmoria",
-                    )
-
-                    InfoRow(
-                        icon = Icons.Default.School,
-                        label = "Course",
-                        value = "BSIT",
-                    )
-
-                    InfoRow(
-                        icon = Icons.Default.Group,
-                        label = "Section",
-                        value = "3-2",
-                    )
-
-                    InfoRow(
-                        icon = Icons.Default.Phone,
-                        label = "Mobile No.",
-                        value = "09979909332",
-                    )
-
-                    InfoRow(
-                        icon = Icons.Default.Email,
-                        label = "Email Address",
-                        value = "jvalmoria91581@liceo.edu.ph",
-                    )
+                Text("• $item", modifier = Modifier.weight(1f))
+                IconButton(onClick = { handler.removeExistingSkill(item) }) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
                 }
             }
         }
+
+        Spacer(Modifier.height(24.dp))
+        
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { handler.togglePreviewMode(true) },
+                modifier = Modifier.weight(1f),
+                enabled = data.name.isNotBlank() && data.email.isNotBlank()
+            ) {
+                Text("Switch to Preview")
+            }
+            Spacer(Modifier.width(8.dp))
+            OutlinedButton(onClick = { handler.resetProfileForm() }) {
+                Text("Clear")
+            }
+        }
     }
 }
+
 @Composable
-fun InfoRow(
-    icon: ImageVector,
-    label: String,
-    value: String,
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(),
+fun PreviewProfileContent(data: UserProfileState, onGoBack: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
-        Box(
-            modifier =
-                Modifier.size(40.dp)
-                    .clip(MaterialTheme.shapes.small)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(20.dp),
-            )
+        Text("Your Profile Summary", fontSize = 26.sp, fontWeight = FontWeight.ExtraBold)
+        Spacer(Modifier.height(16.dp))
+
+        ProfileDetail("Name", data.name)
+        ProfileDetail("Email", data.email)
+        ProfileDetail("Contact", data.mobile)
+        ProfileDetail("Address", data.address)
+        ProfileDetail("Username", data.username)
+
+        Spacer(Modifier.height(16.dp))
+        Text("Skills:", fontWeight = FontWeight.SemiBold)
+        if (data.skillList.isEmpty()) {
+            Text("List is currently empty.")
+        } else {
+            data.skillList.forEach { Text("➤ $it") }
         }
 
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+        Spacer(Modifier.height(32.dp))
+        Button(onClick = onGoBack, modifier = Modifier.fillMaxWidth()) {
+            Text("Return to Form")
         }
     }
 }
 
-@Preview(showBackground = true, name = "Light Mode — Profile Card")
 @Composable
-private fun ProfileScreenLightPreview() {
-    MyApplicationTheme(darkTheme = false) {
-        ProfileScreen(onThemeToggle = {}, isDarkTheme = false)
-    }
-}
-
-@Preview(
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "Dark Mode — Profile Card",
-)
-@Composable
-private fun ProfileScreenDarkPreview() {
-    MyApplicationTheme(darkTheme = true) {
-        ProfileScreen(onThemeToggle = {}, isDarkTheme = true)
+fun ProfileDetail(label: String, info: String) {
+    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+        Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)
+        Text(info.ifBlank { "Not provided" }, fontSize = 18.sp)
     }
 }
