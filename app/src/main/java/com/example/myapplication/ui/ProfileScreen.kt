@@ -22,8 +22,8 @@ fun ProfileScreen(postsVm: PostsViewModel, themeVm: ThemeViewModel) {
     ) {
         Icon(Icons.Default.AccountCircle, null, Modifier.size(96.dp))
         Spacer(Modifier.height(8.dp))
-        Text("JOHN LLOYD M.VALMORIA", style = MaterialTheme.typography.headlineSmall)
-        Text("@jlvalmoria03", style = MaterialTheme.typography.bodyMedium)
+        Text("Juan Dela Cruz", style = MaterialTheme.typography.headlineSmall)
+        Text("@juandelacruz", style = MaterialTheme.typography.bodyMedium)
         Text("BSIT-3 · Liceo de Cagayan University",
              style = MaterialTheme.typography.bodySmall)
         Spacer(Modifier.height(16.dp))
