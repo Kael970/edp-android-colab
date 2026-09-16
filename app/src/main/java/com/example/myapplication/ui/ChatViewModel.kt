@@ -47,17 +47,23 @@ class ChatViewModel(
         }
     }
 
+    var sendError: String? by mutableStateOf(null)
+        private set
+
+    fun clearSendError() { sendError = null }
+
     fun send() {
         if (myName.isBlank() || draft.isBlank()) return
         
         viewModelScope.launch {
+            sendError = null
             when (repository.sendMessage(myName, draft)) {
                 is AppResult.Success -> {
                     draft = ""
                     load()
                 }
                 is AppResult.Failure -> {
-                    uiState = ChatUiState.Error("Could not send. Check your connection.")
+                    sendError = "Could not send. Check your connection."
                 }
             }
         }

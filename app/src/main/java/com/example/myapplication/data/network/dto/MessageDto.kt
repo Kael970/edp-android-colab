@@ -13,6 +13,5 @@ data class MessageDto(
 @Serializable
 data class NewMessageDto(
     val sender: String,
-    val text: String,
-    val createdAt: Long
+    val text: String
 )

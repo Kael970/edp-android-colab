@@ -31,6 +31,27 @@ fun ChatScreen(
         }
     ) { padding ->
         Column(Modifier.padding(padding).fillMaxSize()) {
+            if (viewModel.sendError != null) {
+                Surface(
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        Modifier.padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = viewModel.sendError!!,
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                        TextButton(onClick = { viewModel.clearSendError() }) {
+                            Text("Dismiss")
+                        }
+                    }
+                }
+            }
             Box(Modifier.weight(1f).fillMaxWidth()) {
                 when (val state = viewModel.uiState) {
                     ChatUiState.Loading -> {

@@ -1,5 +1,6 @@
 package com.example.myapplication.data.repository
 
+import android.util.Log
 import com.example.myapplication.core.AppResult
 import com.example.myapplication.data.local.MessageDao
 import com.example.myapplication.data.local.toDomain
@@ -38,8 +39,7 @@ class ChatRepositoryImpl(
     override suspend fun sendMessage(sender: String, text: String): AppResult<Unit> = safeCall {
         val dto = NewMessageDto(
             sender = sender,
-            text = text,
-            createdAt = System.currentTimeMillis()
+            text = text
         )
         api.sendMessage(dto)
         Unit
@@ -55,6 +55,7 @@ class ChatRepositoryImpl(
         } catch (e: IOException) {
             AppResult.Failure.NoInternet
         } catch (e: Exception) {
+            Log.e("ChatRepository", "Unknown error: ${e.message}", e)
             AppResult.Failure.Unknown(e.message)
         }
 }
