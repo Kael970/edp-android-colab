@@ -39,7 +39,8 @@ class ChatRepositoryImpl(
     override suspend fun sendMessage(sender: String, text: String): AppResult<Unit> = safeCall {
         val dto = NewMessageDto(
             sender = sender,
-            text = text
+            text = text,
+            createdAt = System.currentTimeMillis()
         )
         api.sendMessage(dto)
         Unit

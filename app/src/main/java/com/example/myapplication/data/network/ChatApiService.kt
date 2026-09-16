@@ -14,6 +14,6 @@ interface ChatApiService {
         @Query("order") order: String = "desc"
     ): List<MessageDto>
 
-    @POST("messages/")
+    @POST("messages")
     suspend fun sendMessage(@Body message: NewMessageDto): MessageDto
 }
